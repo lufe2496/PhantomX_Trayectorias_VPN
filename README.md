@@ -3,7 +3,7 @@
 TELEOPERACIÓN DE ROBOT PHANTOM PINCHER X
 
 Presentado por:
-Luisa María Medina, Luis Miguel Martínez, Javier Andrés Martínez and Juan David Obando
+Luisa María Medina, Luis Miguel Martínez, Javier Andrés Martínez y Juan David Obando
 
 Profesor: 
 Pedro Fabian Cardenas
