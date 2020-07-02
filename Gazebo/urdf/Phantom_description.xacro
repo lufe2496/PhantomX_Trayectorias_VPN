@@ -1,0 +1,230 @@
+<?xml version="1.0" ?>
+<!-- 
+  UNIVERSIDAD NACIONAL DE COLOMBIA
+  DEPARTAMENTO DE ING. MECANICA Y MECATRONICA
+  LUIS MIGUEL MARTINEZ LARGO
+  -->
+
+<robot name="Phantom" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!-- Include-->
+  <xacro:include filename="$(find Phantom_Gazebo)/urdf/Link__Joint.xacro" />
+  <xacro:include filename="$(find Phantom_Gazebo)/urdf/Phantom_parameters.xacro" />
+  <!-- END - Include -->
+  <property name="pi" value="3.141592654" />
+  <property name="Hbase" value="0.095" />
+  <property name="L1" value="0.04" />
+  <property name="L2" value="0.105" />
+  <property name="L3" value="0.105" />
+  <property name="LTool" value="0.07" />
+  <property name="MFinger" value="0.02" /> <!-- Desplazamiento lateral -->
+  <property name="LFinger" value="0.037" /> <!-- Desplazamiento vertical -->
+  <!-- Robot description -->
+
+
+  <link name="world"/>  <!-- Base link from Gazebo-->
+
+  <joint name="fixed" type="fixed"> <!-- Joint to fix the base so it does not move-->
+    <parent link="world"/>
+    <child link="${link_00_name}"/>
+  </joint>
+  
+
+<!-- Link Base -->
+  <m_link_mesh name="${link_00_name}"
+    origin_xyz="0 0 0"
+    origin_rpy="0 0 0" 
+    meshfile="package://Phantom_Gazebo/meshes/PincherBase.dae"
+    mass="1.024"
+    ixx="0.001" iyy="0.002"  izz="0.001"
+    ixy="0"     iyz="0"
+    ixz="0"
+    
+    	
+  />
+
+  <m_joint name="${joint_01_name}" 
+    type="revolute"
+    axis_xyz="0 0 1"
+    origin_rpy="0 0 0" 
+    origin_xyz="0 0 ${Hbase}"
+    parent="${link_00_name}" child="${link_01_name}"
+    limit_e="100" limit_l="-3.14" limit_u="3.14" limit_v="0.5" 
+  />
+
+
+
+<!-- Link1 -->
+  <m_link_mesh name="${link_01_name}"
+    origin_rpy="0 0 0" 
+    origin_xyz="0 0 0" 
+    meshfile="package://Phantom_Gazebo/meshes/PincherLink1.dae"
+    mass="0.118"    iyy="0.121162"     izz="0.019109"	
+    ixx="0.126826"  iyz="-0.003744"   
+    ixy="0" 	   
+    ixz="0"
+     
+    
+    
+  />
+
+  <m_joint name="${joint_02_name}" 
+    type="revolute"
+    axis_xyz="0 0 1"
+    origin_rpy=" ${pi/2} -${pi/2} 0 " 
+    origin_xyz="0 0 ${L1}"
+    parent="${link_01_name}" child="${link_02_name}"
+    limit_e="100" limit_l="-3.14" limit_u="3.14" limit_v="0.5" 
+  />
+
+
+
+
+
+<!-- Link2 -->
+  <m_link_mesh name="${link_02_name}"
+    origin_rpy="-${pi/2}  0  -${pi/2}" 
+    origin_xyz="0 0 0"
+    meshfile="package://Phantom_Gazebo/meshes/PincherLink2.dae"
+    mass="0.162"
+    ixx="1.118749"     iyy="1.176055"      izz="0.031295"	
+    ixy="0" 	       iyz="-0.011695"
+    ixz="0.000321"
+     
+    
+  />
+
+  <m_joint name="${joint_03_name}" 
+    type="revolute"
+    axis_xyz="0 0 1" 
+    origin_rpy="0 0 0" 
+    origin_xyz="${L2} 0 0"
+    parent="${link_02_name}" child="${link_03_name}"
+    limit_e="100" limit_l="-3.14" limit_u="3.14" limit_v="0.5" 
+  />
+
+
+
+
+
+<!-- Link3 -->
+  <m_link_mesh name="${link_03_name}"
+    origin_rpy="-${pi/2}  0  -${pi/2}" 
+    origin_xyz="0 0 0"
+    meshfile="package://Phantom_Gazebo/meshes/PincherLink3.dae"
+    mass="0.162"
+    ixx="1.118749"     iyy="1.176055"      izz="0.031295"	
+    ixy="0" 	       iyz="-0.011695"
+    ixz="0.000321"
+  />
+
+  <m_joint name="${joint_04_name}" 
+    type="revolute"
+    axis_xyz="0 0 1" 
+    origin_rpy="0 0 0" 
+    origin_xyz="0.105 0 0"
+    parent="${link_03_name}" child="${link_04_name}"
+    limit_e="100" limit_l="-3.14" limit_u="3.14" limit_v="0.5" 
+  />
+
+
+
+
+
+<!-- Link Tool -->
+  <m_link_mesh name="${link_04_name}"
+    origin_rpy="-${pi/2}  0  -${pi/2}" 
+    origin_xyz="0 0 0"
+    meshfile="package://Phantom_Gazebo/meshes/PincherTool.dae"
+    mass="0.160"
+    ixx="0.411970"      iyy="0.438310"    izz="0.068997"	
+    ixy="0.000077" 	iyz="-0.000186"
+    ixz="0.075498"
+    
+    
+  />
+   
+
+   <m_joint name="${joint_05_name}" 
+    type="prismatic"
+    origin_rpy="0 0 0" 
+    origin_xyz="${LTool} 0 0"
+    parent="${link_04_name}" child="${link_05_name}"
+    axis_xyz ="0 0 1"
+    limit_e="100" limit_l="0" limit_u="0.03" limit_v="0.5"
+  />
+    <m_joint name="${joint_06_name}" 
+    type="prismatic"
+    origin_rpy="${pi/2}  0  ${pi/2}" 
+    origin_xyz="${LTool+LFinger} 0 0"
+    parent="${link_04_name}" child="${link_06_name}"
+    axis_xyz ="0 -1 0"
+    limit_e="100" limit_l="0" limit_u="+0.03" limit_v="0.5"
+    
+  />
+  
+<!-- Link Finger -->
+   <m_link_mesh name="${link_05_name}"
+    origin_rpy="-${pi/2}  0  -${pi/2}" 
+    origin_xyz="0 0 ${MFinger}"
+    meshfile="package://Phantom_Gazebo/meshes/PincheFinger.dae"
+    mass="0.018"
+    ixx="0.005774" ixy="0" ixz="0"
+    iyy="0.006755" iyz="-0.001932"
+    izz="0.003631"	
+  />
+
+   <m_link_mesh name="${link_06_name}"
+    origin_rpy="0  0  0" 
+    origin_xyz="0 -${MFinger} -${LFinger}"
+    meshfile="package://Phantom_Gazebo/meshes/PincheFinger.dae"
+    mass="0.018"
+    ixx="0.005774" ixy="0" ixz="0"
+    iyy="0.006755" iyz="-0.001932"
+    izz="0.003631"	
+  />
+
+<!-- END - Robot description -->
+<gazebo>
+	<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"> 
+	</plugin>
+	<robotNamespace>/Phantom_sim</robotNamespace>
+	<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+	<legacyModeNS>false</legacyModeNS>
+</gazebo>
+<gazebo reference="${link_00_name}">
+    <sensor type="camera" name="camera1">
+    <pose frame=''>0 0 +1.2 0 +1.5707 0</pose>
+        <camera>
+            <horizontal_fov>1.047</horizontal_fov>
+            <image>
+              <width>800</width>
+              <height>600</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+        </camera>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>0.0</updateRate>
+                <cameraName>/mybot/camera</cameraName>
+                <imageTopicName>image_raw</imageTopicName>
+                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                <frameName>camera</frameName>
+                <hackBaseline>0.07</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+</gazebo>
+</robot>
+  
